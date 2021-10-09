@@ -17,6 +17,14 @@ class vaccine {
         temp.displayDeet();
         addVaxList(temp);
     }
+    boolean checkName(String name){
+        for (int i=0;i<getList().size();i++){
+            if (getList().get(i).getName().equals(name)){
+                return false;
+            }
+        }
+        return true;
+    }
     void setName(String name){
         this.name=name;
     }
@@ -123,6 +131,14 @@ class hospital {
         //         v.getList().get(i).getVaxAvailableHospitals().add(h);
         //     }
         // }
+    }
+    boolean checkID(int id){
+        for (int i=0;i<getList().size();i++){
+            if (getList().get(i).getID()==id){
+                return true;
+            }
+        }
+        return false;
     }
     void setName(String name){
         this.name=name;
@@ -333,6 +349,10 @@ class citizen{
                     System.out.println(tba.getName() + " vaccinated with "+tba.getVaxGiven());
                 }
             }
+            else{
+                System.out.println("Already vaccinated,no need to worry");
+                return;
+            }
         }
         else{
             System.out.println("NOT ENOUGH QUANTITY LEFT. SORRY. Try Again");
@@ -393,8 +413,6 @@ class citizen{
     }
     void setVaxGiven(String vaxName){
         this.vaxGiven=vaxName;
-        
-
     }
     String getName(){
         return this.name;
@@ -451,8 +469,16 @@ public class cowin {
                 int gap;
                 System.out.print("Vaccine Name: ");
                 name=sc.next();
+                if(vax.checkName(name)==false){
+                    System.out.println("enter unique names next time");
+                    continue;
+                }
                 System.out.print("Number of Doses: ");
                 numDose=sc.nextInt();
+                if (numDose<=0){
+                    System.out.println("Seems like a wrong vaccine,try again");
+                    continue;
+                }
                 if (numDose!=1){
                     System.out.print("Gap between Doses: ");
                     gap=sc.nextInt();
@@ -469,6 +495,10 @@ public class cowin {
                 name=sc.next();
                 System.out.print("PinCode: ");
                 pinCode=sc.nextInt();
+                if (String.valueOf(pinCode).length() != 6){
+                    System.out.println("Wrong Pincode Entered. Try again.");
+                    continue;
+                }
                 hosp.addHospital(name, pinCode);
             }
             else if (n==3){
@@ -479,10 +509,15 @@ public class cowin {
                 name=sc.next();
                 System.out.print("Age: ");
                 age=sc.nextInt();
-                System.out.print("Unique ID: ");
-                id=sc.next();
                 if (age < 18){
                     System.out.println("Only above 18 are allowed");
+                    continue;
+                }
+                System.out.print("Unique ID: ");
+                id=sc.next();
+                if (id.length()!=12){
+                    System.out.println("Valid ID needed, this is invalid");
+                    continue;
                 }
                 else {
                     cit.addCitizen(name, age, id);
@@ -497,7 +532,10 @@ public class cowin {
                 String name;
                 System.out.print("Enter Hospital ID: ");
                 hospID=sc.nextInt();
-                // checker function for hospital ID
+                // if (hosp.checkID(hospID)==false){
+                //     System.out.println("ID does not exist");
+                //     continue;
+                // }
                 System.out.print("Enter number of slots to be added: ");
                 numSlots=sc.nextInt();
                 for (int i=0;i<numSlots;i++){
@@ -522,6 +560,11 @@ public class cowin {
                 int hospID;
                 System.out.print("Enter patient Unique ID: ");
                 id=sc.next();
+                citizen c=cit.searchID(id);
+                if (c==null){
+                    System.out.println("No such patient exists.");
+                    continue;
+                }
                 System.out.println("1. Search By Area");
                 System.out.println("2. Search By Vaccine");
                 System.out.println("3. Exit");
@@ -533,6 +576,10 @@ public class cowin {
                     hosp.hospitalPinCode(pinCode);
                     System.out.print("Enter hospital id: ");
                     hospID=sc.nextInt();
+                    if(hosp.checkID(hospID)==false){
+                        System.out.println("Hospital ID does not exist");
+                        continue;
+                    }
                     hosp.showAllSlots(hospID);
                     System.out.print("Choose Slot: ");
                     choice=sc.nextInt();
@@ -545,6 +592,10 @@ public class cowin {
                     vax.printAllHospitals(v);
                     System.out.print("Enter hospital id: ");
                     hospID=sc.nextInt();
+                    if(hosp.checkID(hospID)==false){
+                        System.out.println("Hospital ID does not exist");
+                        continue;
+                    }
                     hosp.showAllSlotsVax(hospID,vaxName);
                     System.out.print("Choose Slot: ");
                     choice=sc.nextInt();
@@ -559,7 +610,10 @@ public class cowin {
                 int hospID;
                 System.out.print("Enter Hospital ID: ");
                 hospID=sc.nextInt();
-                //check again for hospID existence
+                if(hosp.checkID(hospID)==false){
+                    System.out.println("Hospital ID does not exist");
+                    continue;
+                }
                 hosp.showSlots(hospID);
             }
             else if (n==7){
@@ -567,11 +621,19 @@ public class cowin {
                 System.out.print("Enter Patient ID: ");
                 id=sc.next();
                 citizen c=cit.searchID(id);
+                if (c==null){
+                    System.out.println("No such patient exists.");
+                    continue;
+                }
                 cit.vaccinationStatus(c);
             }
             else if (n==8){
-                System.out.println("Leaving the registration portal");
+                System.out.println("Thanks for using CoWin Portal");
                 break;
+            }
+            else{
+                System.out.println("Enter valid choice");
+                continue;
             }
 
             
