@@ -2,7 +2,7 @@
 
 <ins> <h2> <b> Assignment 1 </b> </h2> </ins>
 
-<h3>This file has 5 classes and each class has all the methods as private.Inorder to access any element getter and setter functions have been used.</h3> <br>
+<h3>This file has 5 classes and each class has all the objects as private.Inorder to access any element getter and setter functions have been used.</h3> <br>
 <h4>The classes are as follows:</h4>
 1. <b>vaccine</b> - class which has got all the details of the vaccine which exists <br>
 2. <b>hospital</b> - class which has got all details of the hospital and the slots and other such relevant information <br>
