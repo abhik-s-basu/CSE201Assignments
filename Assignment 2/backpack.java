@@ -60,6 +60,9 @@ class student implements user{
         this.subs.add("No Subs");
         this.checker.add("No Checker yet");
     }
+    Integer getGrades(int i){
+        return grades.get(i);
+    }
     boolean getPending(int i){
         return pending.get(i);
     }
@@ -80,6 +83,7 @@ class student implements user{
                 System.out.println(this.grades.get(i));
                 System.out.print("Graded by: ");
                 System.out.println(this.checker.get(i));
+                System.out.println();
             }
         }
         System.out.println();
@@ -98,9 +102,9 @@ class student implements user{
         System.out.println("------------------");
     }
     void gradeSubs(int marks,int i,int idx,instructor inst){
-        this.grades.set(idx,marks);
-        this.pending.set(idx,false);
-        this.checker.set(idx,inst.getID());
+        this.grades.set(i,marks);
+        this.pending.set(i,false);
+        this.checker.set(i,inst.getID());
     }
     String getSub(int i){
         return this.subs.get(i);
@@ -442,13 +446,25 @@ public class backpack {
                         }
                     }
                     else if (opt==3){
+                        int count=0;
                         for (int i=0;i<mat.size();i++){
+                            count++;
                             mat.get(i).view();
+                        }
+                        if (count==0){
+                            System.out.println("Nothing uploaded");
+                            continue;
                         }
                     }
                     else if (opt==4){
+                        int count=0;
                         for (int i=0;i<assess.size();i++){
+                            count++;
                             assess.get(i).view(i);
+                        }
+                        if (count==0){
+                            System.out.println("No assessments open currently");
+                            continue;
                         }
                     }
                     else if (opt==5){
@@ -467,7 +483,7 @@ public class backpack {
                         int id=sc.nextInt();
                         for (int i=0;i<studList.size();i++){
                             // if (studList.get(i).getPending(id)==false)
-                            if(!(studList.get(i).getSub(id).equals("No Subs"))){
+                            if((studList.get(i).getSub(id)!="No Subs")&&(studList.get(i).getGrades(id)==-10000)){
                                 count++;
                                 System.out.println(i + " " + studList.get(i).getID());
                             }
@@ -482,7 +498,7 @@ public class backpack {
                         System.out.print("Max Marks: "+assess.get(id).viewMaxMarks());
                         System.out.println();
                         System.out.print("Marks Scored: ");
-                        int marks=sc.nextInt();//will change later
+                        int marks=sc.nextInt();
                         studList.get(choice).gradeSubs(marks,id,choice,instList.get(d));
                     }
                     else if (opt==6){
@@ -540,13 +556,24 @@ public class backpack {
                     System.out.println("7. Logout");
                     int opt=sc.nextInt();
                     if (opt==1){
+                        int count=0;
                         for (int i=0;i<mat.size();i++){
+                            count++;
                             mat.get(i).view();
+                        }
+                        if (count==0){
+                            System.out.println("Nothing uploaded");
+                            continue;
                         }
                     }
                     else if (opt==2){
+                        int count=0;
                         for (int i=0;i<assess.size();i++){
                             assess.get(i).view(i);
+                        }
+                        if (count==0){
+                            System.out.println("No assessments open currently");
+                            continue;
                         }
                     }
                     else if (opt==3){
@@ -596,7 +623,7 @@ public class backpack {
                         System.out.print("Enter comment: ");
                         String content=sc.nextLine();
                         String time=datetimegiver();
-                        comm.add(new comment(content, instList.get(d), time));
+                        comm.add(new comment(content, studList.get(d), time));
                     }
                     if (opt==7){
                         break;
