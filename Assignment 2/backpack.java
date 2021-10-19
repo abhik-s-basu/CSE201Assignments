@@ -2,9 +2,13 @@ import java.util.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-
+interface user {
+    public user  addUser(String s);
+    public String getIDUser();
+}
 interface material{
     public void view();
+
 }
 interface assessment{
     public void view(int i);
@@ -14,9 +18,11 @@ interface assessment{
     public void setCloseStatus(boolean b);
     public int viewMaxMarks();
 }
-class instructor {
+
+class instructor implements user {
     private String ID;
     private ArrayList<assessment> ass=new ArrayList<>();
+    instructor(){};
     instructor(String s){
         this.ID=s;
     }
@@ -26,16 +32,22 @@ class instructor {
     void addAssesment(assessment a){
         this.ass.add(a);
     }
+    @Override
+    public user addUser(String s){
+        return new instructor(s);
+    }
+    public String getIDUser(){
+        return this.getID();
+    }
     
 }
-class student{
+class student implements user{
     private String ID;
     private ArrayList<Boolean> pending=new ArrayList<>();
-    // private ArrayList<assessment>assList=new ArrayList<>();
     private ArrayList<Integer>grades=new ArrayList<>();
     private ArrayList<String> subs=new ArrayList<>();
     private ArrayList<String> checker=new ArrayList<>();
-
+    student(){};
     student(String s){
         this.ID=s;
     }
@@ -44,8 +56,7 @@ class student{
     }
     void addAssesment(assessment a){
         this.pending.add(true);
-        // this.assList.add(a);
-        this.grades.add(-1);
+        this.grades.add(-10000);
         this.subs.add("No Subs");
         this.checker.add("No Checker yet");
     }
@@ -62,7 +73,7 @@ class student{
     void viewGrades(){
         System.out.println("Graded Submissions ");
         for (int i=0;i<this.pending.size();i++){
-            if ((this.grades.get(i)!=-1)&&(this.pending.get(i)==false)){
+            if ((this.grades.get(i)!=-10000)&&(this.pending.get(i)==false)){
                 System.out.print("Submission: ");
                 System.out.println(this.subs.get(i));
                 System.out.print("Marks Scored: ");
@@ -74,9 +85,11 @@ class student{
         System.out.println();
         System.out.println("Ungraded Submission");
         for (int i=0;i<this.pending.size();i++){
-            if ((this.grades.get(i)==-1)&&(this.pending.get(i)==false)){
-                System.out.print("Submission: ");
-                System.out.println(this.subs.get(i));
+            if ((this.grades.get(i)==-10000)&&(this.pending.get(i)==false)){
+                if (!(this.subs.get(i).equals("No Subs"))){
+                    System.out.print("Submission: ");
+                    System.out.println(this.subs.get(i));
+                }            
             }
         }
     }
@@ -84,10 +97,20 @@ class student{
         System.out.println("Submission: "+this.subs.get(i));
         System.out.println("------------------");
     }
-    void gradeSubs(int marks,int i,int idx,String instID){
+    void gradeSubs(int marks,int i,int idx,instructor inst){
         this.grades.set(idx,marks);
         this.pending.set(idx,false);
-        this.checker.set(idx,instID);
+        this.checker.set(idx,inst.getID());
+    }
+    String getSub(int i){
+        return this.subs.get(i);
+    }
+    @Override
+    public user addUser(String s){
+        return new student(s);
+    }
+    public String getIDUser(){
+        return this.getID();
     }
 }
 
@@ -196,29 +219,34 @@ class quiz implements assessment{
     }
 }
 
+class comment {
+    private String content;
+    private String userID;
+    private String time;
+    comment(String content,user u,String time){
+        this.content=content;
+        this.userID= u.getIDUser();
+        this.time=time;
+    }
+    void viewComment(){
+        System.out.println(this.content + " - " + this.userID);
+        System.out.println(this.time);
+        System.out.println();
+    }
+}
+
 class lectureSlides implements material{
     private String topic;
     private int num;
     private  String content[];
     private String uploader;
     private String dateOfUpload;
-    private static String datetimegiver() {
-        LocalDateTime ldt = LocalDateTime.now();
-        TimeZone tz= TimeZone.getDefault();
-        String zone=tz.getDisplayName(false, 0);
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("EEE MMM d HH:mm:ss ");
-        String formattedDate = ldt.format(dtf) + zone;
-        DateTimeFormatter dtf1 = DateTimeFormatter.ofPattern(" YYYY");
-        String formattedYear=ldt.format(dtf1);
-        formattedDate+=formattedYear;
-        return formattedDate;
-    }
-    lectureSlides(String topic,int num, String [] content,String uploader){
+    lectureSlides(String topic,int num, String [] content,String uploader,String dateOfUpload){
         this.topic=topic;
         this.num=num;
         this.content=content;
         this.uploader=uploader;
-        this.dateOfUpload=datetimegiver();
+        this.dateOfUpload=dateOfUpload;
     }
     private void viewSlides(){
         System.out.println("Title of Slides: " + this.topic);
@@ -257,23 +285,13 @@ class lectureVideos implements material{
     private String name;
     private String uploader;
     private String dateOfUpload;
-    lectureVideos(String topic,String name,String uploader){
+    lectureVideos(String topic,String name,String uploader,String dateOfUpload){
         this.topic=topic;
         this.name=name;
         this.uploader=uploader;
-        this.dateOfUpload=datetimegiver();
+        this.dateOfUpload=dateOfUpload;
     }
-    private static String datetimegiver() {
-        LocalDateTime ldt = LocalDateTime.now();
-        TimeZone tz= TimeZone.getDefault();
-        String zone=tz.getDisplayName(false, 0);
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("EEE MMM d HH:mm:ss ");
-        String formattedDate = ldt.format(dtf) + zone;
-        DateTimeFormatter dtf1 = DateTimeFormatter.ofPattern(" YYYY");
-        String formattedYear=ldt.format(dtf1);
-        formattedDate+=formattedYear;
-        return formattedDate;
-    }
+    
     private void viewVideos(){
         System.out.println("Title of video: "+ this.getTopic());
         System.out.println("Video File: "+this.getName());
@@ -310,6 +328,7 @@ public class backpack {
         ArrayList<student> studList= new ArrayList<>();
         ArrayList<material> mat= new ArrayList<>();
         ArrayList<assessment> assess= new ArrayList<>();
+        ArrayList<comment> comm=new ArrayList<>();
         instList.add(new instructor("I0"));
         instList.add(new instructor("I1"));
         studList.add(new student("SO"));
@@ -361,7 +380,8 @@ public class backpack {
                                 System.out.print("Content of Slide "+ (int)(i+1) + " : ");
                                 content[i]=scan.nextLine();
                             }
-                            lectureSlides ls= new lectureSlides(topic, num, content,instList.get(d).getID());
+                            String time=datetimegiver();
+                            lectureSlides ls= new lectureSlides(topic, num, content,instList.get(d).getID(),time);
                             mat.add(ls);
                         }
                         else if (a==2){
@@ -379,7 +399,8 @@ public class backpack {
                                 System.out.println("error in file format. Only .mp4 extensions acceptable");
                                 continue;
                             }
-                            lectureVideos lv = new lectureVideos(topic, name, instList.get(d).getID());
+                            String time=datetimegiver();
+                            lectureVideos lv = new lectureVideos(topic, name, instList.get(d).getID(),time);
                             mat.add(lv);
                         }
                     }
@@ -431,16 +452,29 @@ public class backpack {
                         }
                     }
                     else if (opt==5){
+                        int count = 0;
+                        int count1=0;
                         System.out.println("List of Assessments");
                         for (int i=0;i<assess.size();i++){
+                            count1++;
                             assess.get(i).viewAll(i);
+                        }
+                        if(count1==0){
+                            System.out.println("No assessments only.");
+                            continue;
                         }
                         System.out.print("Enter ID of assessment to view submission: ");
                         int id=sc.nextInt();
                         for (int i=0;i<studList.size();i++){
-                            if (studList.get(i).getPending(id)==false){
+                            // if (studList.get(i).getPending(id)==false)
+                            if(!(studList.get(i).getSub(id).equals("No Subs"))){
+                                count++;
                                 System.out.println(i + " " + studList.get(i).getID());
                             }
+                        }
+                        if (count==0){
+                            System.out.println(" No submissions done.");
+                            continue;
                         }
                         int choice=sc.nextInt();
                         System.out.println("Submission: ");
@@ -449,12 +483,18 @@ public class backpack {
                         System.out.println();
                         System.out.print("Marks Scored: ");
                         int marks=sc.nextInt();//will change later
-                        studList.get(choice).gradeSubs(marks,id,choice,instList.get(d).getID());
+                        studList.get(choice).gradeSubs(marks,id,choice,instList.get(d));
                     }
                     else if (opt==6){
+                        int count=0;
                         System.out.println("List of open assignments: ");
                         for (int i=0;i<assess.size();i++){
+                            count++;
                             assess.get(i).view(i);
+                        }
+                        if(count==0){
+                            System.out.println("No open ASSIGNMENTS. SORRY");
+                            continue;
                         }
                         System.out.print("Enter ID of assignment to close: ");
                         int closer=sc.nextInt();
@@ -463,7 +503,18 @@ public class backpack {
                             studList.get(i).setPending(closer, false);
                         }
                     }
-
+                    else if(opt==7){
+                        for (int i=0;i<comm.size();i++){
+                            comm.get(i).viewComment();
+                        }
+                    }
+                    else if (opt==8){
+                        sc.nextLine();
+                        System.out.print("Enter comment: ");
+                        String content=sc.nextLine();
+                        String time=datetimegiver();
+                        comm.add(new comment(content, instList.get(d), time));
+                    }
                     else if (opt==9){
                         break;
                     }
@@ -535,6 +586,18 @@ public class backpack {
                     else if (opt ==4){
                         studList.get(d).viewGrades();
                     }
+                    else if (opt==5){
+                        for (int i=0;i<comm.size();i++){
+                            comm.get(i).viewComment();
+                        }
+                    }
+                    else if(opt==6){
+                        sc.nextLine();
+                        System.out.print("Enter comment: ");
+                        String content=sc.nextLine();
+                        String time=datetimegiver();
+                        comm.add(new comment(content, instList.get(d), time));
+                    }
                     if (opt==7){
                         break;
                     }
@@ -544,6 +607,17 @@ public class backpack {
                 break;
             }
         }
+    }
+    private static String datetimegiver() {
+        LocalDateTime ldt = LocalDateTime.now();
+        TimeZone tz= TimeZone.getDefault();
+        String zone=tz.getDisplayName(false, 0);
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("EEE MMM d HH:mm:ss ");
+        String formattedDate = ldt.format(dtf) + zone;
+        DateTimeFormatter dtf1 = DateTimeFormatter.ofPattern(" YYYY");
+        String formattedYear=ldt.format(dtf1);
+        formattedDate+=formattedYear;
+        return formattedDate;
     }
 }
 
