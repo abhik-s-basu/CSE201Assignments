@@ -1,4 +1,4 @@
-
+import java.util.ArrayList;
 import java.util.Scanner;
 class player{
     private String name;
@@ -23,61 +23,90 @@ class player{
         return this.currFloor;
     }
 }
-
-class emptyFloor {
-    emptyFloor(){};
+class floor{
+    floor(){};
+    protected void userUpdate(player p,int currFloor, int points){
+        p.setCurrFloor(currFloor);
+        p.setPoint(p.getPoint()+points);
+    }
     protected void update (player p){
         System.out.println("Player position Floor - "+p.getCurrFloor());
         p.setPoint(p.getPoint()+1);
         System.out.println(p.getName() + " has reached an empty floor");
         System.out.println("Total Points "+ p.getPoint());
     }
-    protected void userUpdate(player p,int currFloor, int points){
-        p.setCurrFloor(currFloor);
-        p.setPoint(p.getPoint()+points);
+}
+class empty extends floor {
+    empty(){
+        super();
     }
 }
-class snake extends emptyFloor{
-    snake(){};
+class snake extends floor{
+    snake(){
+        super();
+    }
     @Override
     protected void update (player p){
+        System.out.println("Total Points "+ p.getPoint());
+        super.update(p);
+    }
+}
+class ladder extends floor{
+    ladder(){
+        super();
+    }
+    @Override
+    protected void update (player p){
+        System.out.println("Total Points "+ p.getPoint());
+        super.update(p);
+    }
+}
+class normalSnake extends snake{
+    normalSnake(){
+        super();
+    }
+    @Override
+    protected void update(player p){
         System.out.println("Player position Floor - "+p.getCurrFloor());
         userUpdate(p, 1, -2);
         System.out.println(p.getName() + " has reached a normal snake floor");
-        System.out.println("Total Points "+ p.getPoint());
         super.update(p);
     }
+
 }
-class ladder extends emptyFloor{
-    ladder(){};
-    @Override
-    protected void update (player p){
-        System.out.println("Player position Floor - "+p.getCurrFloor());
-        userUpdate(p, 12, 2);
-        System.out.println(p.getName() + " has reached a ladder floor");
-        System.out.println("Total Points "+ p.getPoint());
-        super.update(p);
+class kingCobra extends snake{
+    kingCobra(){
+        super();
     }
-}
-class kingCobra extends emptyFloor{
-    kingCobra(){};
     @Override
     protected void update (player p){
         System.out.println("Player position Floor - "+p.getCurrFloor());
         userUpdate(p, 3, -4);
         System.out.println(p.getName() + " has reached a King Cobra floor");
-        System.out.println("Total Points "+ p.getPoint());
         super.update(p);
     }
 }
-class elevator extends emptyFloor{
-    elevator(){};
+class normalLadder extends ladder{
+    normalLadder(){
+        super();
+    }
+    @Override
+    protected void update(player p){
+        System.out.println("Player position Floor - "+p.getCurrFloor());
+        userUpdate(p, 12, 2);
+        System.out.println(p.getName() + " has reached a ladder floor");
+        super.update(p);
+    }
+}
+class elevator extends ladder{
+    elevator(){
+        super();
+    }
     @Override
     protected void update (player p){
         System.out.println("Player position Floor - "+p.getCurrFloor());
         userUpdate(p, 10, 4);
         System.out.println(p.getName() + " has reached the elevator floor");
-        System.out.println("Total Points "+ p.getPoint());
         super.update(p);
     }
 }
@@ -106,15 +135,15 @@ class dice{
  */
 public class board {
     public static void main(String[] args) {
-        emptyFloor[] floorList= new emptyFloor[14];
+        floor[] floorList= new floor[14];
         for (int i=0;i<floorList.length;i++){
             if (!(i==2 || i==8 || i==5 || i==11)){
-                floorList[i]=new emptyFloor();
+                floorList[i]=new empty();
             }
         }
         floorList[2]=new elevator();
-        floorList[5]= new snake();
-        floorList[8]=new ladder();
+        floorList[5]= new normalSnake();
+        floorList[8]=new normalLadder();
         floorList[11]= new kingCobra();
         dice d= new dice(2);
         Scanner sc=new Scanner (System.in);

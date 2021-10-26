@@ -31,85 +31,115 @@ class player{
     int getMoves(){
         return this.moves;
     }
-
 }
-
-class emptyFloor {
-    emptyFloor(){};
+class floor{
+    floor(){};
+    protected void userUpdate(player p,int currFloor, int points){
+        p.setCurrFloor(currFloor);
+        p.setPoint(p.getPoint()+points);
+    }
     protected void update (player p){
         System.out.println("Player position Floor - "+p.getCurrFloor());
         p.setPoint(p.getPoint()+1);
         System.out.println(p.getName() + " has reached an empty floor");
         System.out.println("Total Points "+ p.getPoint());
     }
-    protected void userUpdate(player p,int currFloor, int points){
-        p.setCurrFloor(currFloor);
-        p.setPoint(p.getPoint()+points);
+}
+class empty extends floor {
+    empty(){
+        super();
     }
 }
-class snake extends emptyFloor{
-    snake(){};
+class snake extends floor{
+    snake(){
+        super();
+    }
     @Override
     protected void update (player p){
+        System.out.println("Total Points "+ p.getPoint());
+        super.update(p);
+    }
+}
+class ladder extends floor{
+    ladder(){
+        super();
+    }
+    @Override
+    protected void update (player p){
+        System.out.println("Total Points "+ p.getPoint());
+        super.update(p);
+    }
+}
+class normalSnake extends snake{
+    normalSnake(){
+        super();
+    }
+    @Override
+    protected void update(player p){
         System.out.println("Player position Floor - "+p.getCurrFloor());
         userUpdate(p, 1, -2);
         System.out.println(p.getName() + " has reached a normal snake floor");
-        System.out.println("Total Points "+ p.getPoint());
         super.update(p);
     }
+
 }
-class ladder extends emptyFloor{
-    ladder(){};
-    @Override
-    protected void update (player p){
-        System.out.println("Player position Floor - "+p.getCurrFloor());
-        userUpdate(p, 12, 2);
-        System.out.println(p.getName() + " has reached a ladder floor");
-        System.out.println("Total Points "+ p.getPoint());
-        super.update(p);
+class kingCobra extends snake{
+    kingCobra(){
+        super();
     }
-}
-class kingCobra extends emptyFloor{
-    kingCobra(){};
     @Override
     protected void update (player p){
         System.out.println("Player position Floor - "+p.getCurrFloor());
         userUpdate(p, 3, -4);
         System.out.println(p.getName() + " has reached a King Cobra floor");
-        System.out.println("Total Points "+ p.getPoint());
         super.update(p);
     }
 }
-class elevator extends emptyFloor{
-    elevator(){};
+class python extends snake{
+    python(){
+        super();
+    }
+    @Override
+    protected void update (player p){
+        System.out.println("Player position Floor - "+p.getCurrFloor());
+        userUpdate(p, 13, -3);
+        System.out.println(p.getName() + " has reached a King Cobra floor");
+        super.update(p);
+    }
+}
+class normalLadder extends ladder{
+    normalLadder(){
+        super();
+    }
+    @Override
+    protected void update(player p){
+        System.out.println("Player position Floor - "+p.getCurrFloor());
+        userUpdate(p, 12, 2);
+        System.out.println(p.getName() + " has reached a ladder floor");
+        super.update(p);
+    }
+}
+class elevator extends ladder{
+    elevator(){
+        super();
+    }
     @Override
     protected void update (player p){
         System.out.println("Player position Floor - "+p.getCurrFloor());
         userUpdate(p, 10, 4);
         System.out.println(p.getName() + " has reached the elevator floor");
-        System.out.println("Total Points "+ p.getPoint());
         super.update(p);
     }
 }
-class python extends emptyFloor{
-    python(){};
-    @Override
-    protected void update (player p){
-        System.out.println("Player position Floor - "+p.getCurrFloor());
-        userUpdate(p, 13, -3);
-        System.out.println(p.getName() + " has reached the python floor");
-        System.out.println("Total Points "+ p.getPoint());
-        super.update(p);
+class stairs extends ladder{
+    stairs(){
+        super();
     }
-}
-class stairs extends emptyFloor{
-    stairs(){};
     @Override
-    protected void update (player p){
+    protected void update(player p){
         System.out.println("Player position Floor - "+p.getCurrFloor());
         userUpdate(p, 19, 3);
         System.out.println(p.getName() + " has reached the stairs floor");
-        System.out.println("Total Points "+ p.getPoint());
         super.update(p);
     }
 }
@@ -138,22 +168,22 @@ class dice{
  */
 public class board {
     public static void main(String[] args) {
-        emptyFloor[] floorList= new emptyFloor[21];
+        floor[] floorList= new floor[21];
         ArrayList<player> players= new ArrayList<>();
         for (int i=0;i<floorList.length;i++){
             if (!(i==2 || i==8 || i==5 || i==11 || i==14 || i==17)){
-                floorList[i]=new emptyFloor();
+                floorList[i]=new empty();
             }
         }
         floorList[2]=new elevator();
-        floorList[5]= new snake();
-        floorList[8]=new ladder();
+        floorList[5]= new normalSnake();
+        floorList[8]=new normalLadder();
         floorList[11]= new kingCobra();
         floorList[14]= new stairs();
         floorList[17]= new python();
         for (int i=0; i < floorList.length;i++){
             if (!(i==2 || i==8 || i==5 || i==11 || i==14 || i==17)){
-                System.out.println("Floor " + i + " -> " + floorList[i].getClass().toString().substring(5));
+                System.out.println("Floor " + i + " -> " + "empty");
             }
             else{
                 System.out.println("Floor " + i + " -> " + floorList[i].getClass().toString().substring(5).toUpperCase());
@@ -200,11 +230,17 @@ public class board {
             System.out.println("#" + (int)(i+1)+ " "+players.get(i).getName() + " scored " + players.get(i).getPoint() + " in " + players.get(i).getMoves() +" moves");
         }
         System.out.println("##########################################");
-        System.out.println("»»——⍟——«« »»——⍟——«« »»——⍟——««");
-        System.out.println("(＾O＾) "+"Congratulations to " + players.get(0).getName() + " (＾O＾)");
-        System.out.println(".·´¯`(>▂<)´¯`·. " + "Sorry to " +players.get(players.size()-1).getName() + " .·´¯`(>▂<)´¯`·.");
-        System.out.println("»»——⍟——«« »»——⍟——«« »»——⍟——««");
-        System.out.println(" G A M E  O V E R");
+        if (num>1){
+            System.out.println("»»——⍟——«« »»——⍟——«« »»——⍟——««");
+            System.out.println("(＾O＾) "+"Congratulations to " + players.get(0).getName() + " (＾O＾)");
+            System.out.println(".·´¯`(>▂<)´¯`·. " + "Sorry to " +players.get(players.size()-1).getName() + " .·´¯`(>▂<)´¯`·.");
+            System.out.println("»»——⍟——«« »»——⍟——«« »»——⍟——««");
+            System.out.println(" G A M E  O V E R");
+        }
+        else{
+            System.out.println(" G A M E  O V E R");
+        }
+        
     }
     static void sort (ArrayList<player> p){
         for (int i=0;i<p.size()-1;i++){
