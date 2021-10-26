@@ -24,8 +24,8 @@ class player{
     }
 }
 
-class floor {
-    floor(){};
+class emptyFloor {
+    emptyFloor(){};
     protected void update (player p){
         System.out.println("Player position Floor - "+p.getCurrFloor());
         p.setPoint(p.getPoint()+1);
@@ -37,7 +37,7 @@ class floor {
         p.setPoint(p.getPoint()+points);
     }
 }
-class snake extends floor{
+class snake extends emptyFloor{
     snake(){};
     @Override
     protected void update (player p){
@@ -48,7 +48,7 @@ class snake extends floor{
         super.update(p);
     }
 }
-class ladder extends floor{
+class ladder extends emptyFloor{
     ladder(){};
     @Override
     protected void update (player p){
@@ -59,7 +59,7 @@ class ladder extends floor{
         super.update(p);
     }
 }
-class kingCobra extends floor{
+class kingCobra extends emptyFloor{
     kingCobra(){};
     @Override
     protected void update (player p){
@@ -70,7 +70,7 @@ class kingCobra extends floor{
         super.update(p);
     }
 }
-class elevator extends floor{
+class elevator extends emptyFloor{
     elevator(){};
     @Override
     protected void update (player p){
@@ -106,10 +106,10 @@ class dice{
  */
 public class board {
     public static void main(String[] args) {
-        floor [] floorList= new floor[14];
+        emptyFloor[] floorList= new emptyFloor[14];
         for (int i=0;i<floorList.length;i++){
             if (!(i==2 || i==8 || i==5 || i==11)){
-                floorList[i]=new floor();
+                floorList[i]=new emptyFloor();
             }
         }
         floorList[2]=new elevator();
