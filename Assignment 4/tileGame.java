@@ -26,7 +26,7 @@ class player{
     }
     void showBucket(){
         for(int i=0;i<this.bucket.size();i++){
-            System.out.print(bucket.get(i).getName() + " ,");
+            System.out.print(bucket.get(i).getName() + " | ");
         }
         System.out.println();
     }
@@ -122,15 +122,14 @@ public class tileGame {
                                 if (ans.toLowerCase().equals("integer")){
                                     final calculator<Integer> calc = new calculator<Integer>();
                                     boolean errHandler=true;
-                                    int rand1 = 0;
+                                    // int rand1 = 0;
                                     int dividend = 0;
                                     int divisor = 0;
                                     int answer = 0;
                                     while (errHandler == true){
                                         try{
-                                            rand1 = rand.nextInt();
-                                            dividend = rand1*rand.nextInt();
-                                            divisor = rand1*rand.nextInt();
+                                            divisor = rand.nextInt();
+                                            dividend = divisor*rand.nextInt();
                                             answer= (dividend/divisor);
                                             errHandler=false;
                         
@@ -140,30 +139,36 @@ public class tileGame {
                                         }
                                     }
                                     System.out.println("Calculate the result of division of " + dividend  + " and " + divisor);
-                                    try{
-                                        int a=sc.nextInt();
-                                        sc.nextLine();
-                                        if (calc.checkAns(a,answer)){
-                                            System.out.println("Correct Answer");
-                                            try{
-                                                softToys e1=(softToys)carpet[dice].getToy().clone();
-                                                p.getBucket().add(e1);
-                                                System.out.println("You won a " + e1.getName() +" soft toy");
+                                    boolean inpErr=true;
+                                    while(inpErr==true){
+                                        try{
+                                            int a=sc.nextInt();
+                                            sc.nextLine();
+                                            if (calc.checkAns(a,answer)){
+                                                System.out.println("Correct Answer");
+                                                try{
+                                                    softToys e1=(softToys)carpet[dice].getToy().clone();
+                                                    p.getBucket().add(e1);
+                                                    System.out.println("You won a " + e1.getName() +" soft toy");
+                                                    errProne=false;
+                                                    inpErr=false;
+                                                    // sc.nextLine();
+                                                }   
+                                                catch (CloneNotSupportedException err){
+                                                    System.out.println("Clone not suppported, sorry");
+                                                    break;
+                                                }
+                                            }
+                                            else {
+                                                System.out.println("Wrong answer, no toy for you");
                                                 errProne=false;
-                                                // sc.nextLine();
-                                            }   
-                                            catch (CloneNotSupportedException err){
-                                                System.out.println("Clone not suppported, sorry");
-                                                break;
+                                                inpErr=false;
                                             }
                                         }
-                                        else {
-                                            System.out.println("Wrong answer, no toy for you");
-                                            errProne=false;
+                                        catch (InputMismatchException e){
+                                            System.out.println("Wrong answer as well as wrong input; Enter integer pls");
+                                            sc.nextLine();
                                         }
-                                    }
-                                    catch (InputMismatchException e){
-                                        System.out.println("Wrong answer as well as wrong input; chance skipped");
                                     }
                                 }
                                 else if (ans.toLowerCase().equals("string")){
