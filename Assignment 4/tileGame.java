@@ -17,21 +17,35 @@ class softToys implements Cloneable{
 }
 
 class player{
-    private ArrayList<softToys> bucket;
+    private bucket b;
     player(){
-        this.bucket=new ArrayList<softToys>();
+        b= new bucket();
+    }
+    bucket getBucket(){
+        return b;
+    }
+    
+}
+
+class bucket{
+    private ArrayList<softToys> b;
+    bucket(){
+        this.b=new ArrayList<softToys>();
     }
     ArrayList<softToys> getBucket(){
-        return bucket;
+        return b;
+    }
+    void addToy (softToys e){
+        b.add(e);
     }
     void showBucket(){
-        for(int i=0;i<this.bucket.size();i++){
-            System.out.print(bucket.get(i).getName() + " | ");
+        for(int i=0;i<this.b.size();i++){
+            System.out.print(b.get(i).getName() + " | ");
         }
         System.out.println();
     }
-}
 
+}
 class tile {
     private softToys toys;
     private int position;
@@ -105,7 +119,7 @@ public class tileGame {
                         System.out.println("You landed on tile " + (int)carpet[dice].getPosition());
                         try{
                             softToys e=(softToys)carpet[dice].getToy().clone();
-                            p.getBucket().add(e);
+                            p.getBucket().addToy(e);
                             System.out.println("You won a " + e.getName() +" soft toy");
                             errProne=false;
                         }
@@ -148,7 +162,7 @@ public class tileGame {
                                                 System.out.println("Correct Answer");
                                                 try{
                                                     softToys e1=(softToys)carpet[dice].getToy().clone();
-                                                    p.getBucket().add(e1);
+                                                    p.getBucket().addToy(e1);
                                                     System.out.println("You won a " + e1.getName() +" soft toy");
                                                     errProne=false;
                                                     inpErr=false;
@@ -181,13 +195,13 @@ public class tileGame {
                                         s2 += alphalist.charAt(rand.nextInt(52));
                                     }
                                     String answer = s1+s2;
-                                    System.out.println("Calculate the concatenation of " + s1 + " and " + s2 );
+                                    System.out.println("Calculate the concatenation of "+ s1 + " and " + s2 );
                                     String a=sc.nextLine();
                                     if(calc.checkAns(a,answer)==true){
                                         System.out.println("Correct Answer");
                                         try{
                                             softToys e1=(softToys)carpet[dice].getToy().clone();
-                                            p.getBucket().add(e1);
+                                            p.getBucket().addToy(e1);;
                                             System.out.println("You won a " + e1.getName() +" soft toy");
                                             errProne=false;
                                             // sc.nextLine();
@@ -228,6 +242,6 @@ public class tileGame {
         }
         System.out.println("Game Over");
         System.out.println("SOFT TOYS WON ARE:");
-        p.showBucket();
+        p.getBucket().showBucket();
     }
 }
