@@ -27,6 +27,13 @@ class player{
     
 }
 
+class NoToysException extends Exception{
+    public NoToysException(String message){
+        super(message);
+    }
+}
+
+
 class bucket{
     private ArrayList<softToys> b;
     bucket(){
@@ -38,7 +45,11 @@ class bucket{
     void addToy (softToys e){
         b.add(e);
     }
-    void showBucket(){
+    void showBucket() throws NoToysException{
+        if (this.b.size()==0){
+            throw new NoToysException("No toys in the bucket, nothing to show ");
+        }
+        System.out.println("SOFT TOYS WON ARE:");
         for(int i=0;i<this.b.size();i++){
             System.out.print(b.get(i).getName() + " | ");
         }
@@ -58,6 +69,15 @@ class tile {
     }
     softToys getToy(){
         return this.toys;
+    }
+}
+class carpet {
+    private tile[] t= new tile[20];
+    void add (softToys toys,int position){
+        t[position-1]=new tile(toys,position);
+    }
+    tile get (int position){
+        return t[position];
     }
 }
 
@@ -80,27 +100,48 @@ public class tileGame {
     public static void main(String[] args){
         Scanner sc = new Scanner (System.in);
         Random rand= new Random();
-        tile[] carpet = new tile[20];
-        carpet[0]=new tile(new softToys("Honey"),1);
-        carpet[1]=new tile(new softToys("Pookie"),2);
-        carpet[2]=new tile(new softToys("Snowball"),3);
-        carpet[3]=new tile(new softToys("Cuddles"),4);
-        carpet[4]=new tile(new softToys("Fudge"),5);
-        carpet[5]=new tile(new softToys("Ted"),6);
-        carpet[6]=new tile(new softToys("Wally"),7);
-        carpet[7]=new tile(new softToys("Donald Duck"),8);
-        carpet[8]=new tile(new softToys("Tuffy"),9);
-        carpet[9]=new tile(new softToys("Squishy"),10);
-        carpet[10]=new tile(new softToys("Minion"),11);
-        carpet[11]=new tile(new softToys("Jigglypuff"),12);
-        carpet[12]=new tile(new softToys("Mr Cuddlesworth"),13);
-        carpet[13]=new tile(new softToys("Booboo"),14);
-        carpet[14]=new tile(new softToys("Fuzzy Wuzzy"),15);
-        carpet[15]=new tile(new softToys("Pikachu"),16);
-        carpet[16]=new tile(new softToys("Captain America"),17);
-        carpet[17]=new tile(new softToys("Thor"),18);
-        carpet[18]=new tile(new softToys("Iron Man"),19);
-        carpet[19]=new tile(new softToys("Doctor Strange"),20);
+        // tile[] carpet = new tile[20];
+        // carpet[0]=new tile(new softToys("Honey"),1);
+        // carpet[1]=new tile(new softToys("Pookie"),2);
+        // carpet[2]=new tile(new softToys("Snowball"),3);
+        // carpet[3]=new tile(new softToys("Cuddles"),4);
+        // carpet[4]=new tile(new softToys("Fudge"),5);
+        // carpet[5]=new tile(new softToys("Ted"),6);
+        // carpet[6]=new tile(new softToys("Wally"),7);
+        // carpet[7]=new tile(new softToys("Donald Duck"),8);
+        // carpet[8]=new tile(new softToys("Tuffy"),9);
+        // carpet[9]=new tile(new softToys("Squishy"),10);
+        // carpet[10]=new tile(new softToys("Minion"),11);
+        // carpet[11]=new tile(new softToys("Jigglypuff"),12);
+        // carpet[12]=new tile(new softToys("Mr Cuddlesworth"),13);
+        // carpet[13]=new tile(new softToys("Booboo"),14);
+        // carpet[14]=new tile(new softToys("Fuzzy Wuzzy"),15);
+        // carpet[15]=new tile(new softToys("Pikachu"),16);
+        // carpet[16]=new tile(new softToys("Captain America"),17);
+        // carpet[17]=new tile(new softToys("Thor"),18);
+        // carpet[18]=new tile(new softToys("Iron Man"),19);
+        // carpet[19]=new tile(new softToys("Doctor Strange"),20);
+        carpet c = new carpet();
+        c.add(new softToys("Honey"),1);
+        c.add(new softToys("Pookie"),2);
+        c.add(new softToys("Snowball"),3);
+        c.add(new softToys("Cuddles"),4);
+        c.add(new softToys("Fudge"),5);
+        c.add(new softToys("Ted"),6);
+        c.add(new softToys("Wally"),7);
+        c.add(new softToys("Donald Duck"),8);
+        c.add(new softToys("Tuffy"),9);
+        c.add(new softToys("Squishy"),10);
+        c.add(new softToys("Minion"),11);
+        c.add(new softToys("Jigglypuff"),12);
+        c.add(new softToys("Mr Cuddlesworth"),13);
+        c.add(new softToys("Booboo"),14);
+        c.add(new softToys("Fuzzy Wuzzy"),15);
+        c.add(new softToys("Pikachu"),16);
+        c.add(new softToys("Captain America"),17);
+        c.add(new softToys("Thor"),18);
+        c.add(new softToys("Iron Man"),19);
+        c.add(new softToys("Doctor Strange"),20);
         player p= new player();
         System.out.print("Hit enter to initialise the game");
         sc.nextLine();
@@ -115,10 +156,10 @@ public class tileGame {
             // System.out.println(dice);
             while(errProne==true){
                 try{
-                    if(carpet[dice].getPosition()%2==0){
-                        System.out.println("You landed on tile " + (int)carpet[dice].getPosition());
+                    if(c.get(dice).getPosition()%2==0){
+                        System.out.println("You landed on tile " + (int)c.get(dice).getPosition());
                         try{
-                            softToys e=(softToys)carpet[dice].getToy().clone();
+                            softToys e=(softToys)c.get(dice).getToy().clone();
                             p.getBucket().addToy(e);
                             System.out.println("You won a " + e.getName() +" soft toy");
                             errProne=false;
@@ -128,8 +169,8 @@ public class tileGame {
                             break;
                         }
                     }
-                    else if(carpet[dice].getPosition()%2==1){
-                            System.out.println("You landed on tile " + (int)carpet[dice].getPosition());
+                    else if(c.get(dice).getPosition()%2==1){
+                            System.out.println("You landed on tile " + (int)c.get(dice).getPosition());
                             System.out.println("Question answer round. integer or string?");
                             String ans= sc.nextLine();
                             try{
@@ -161,7 +202,7 @@ public class tileGame {
                                             if (calc.checkAns(a,answer)){
                                                 System.out.println("Correct Answer");
                                                 try{
-                                                    softToys e1=(softToys)carpet[dice].getToy().clone();
+                                                    softToys e1=(softToys)c.get(dice).getToy().clone();
                                                     p.getBucket().addToy(e1);
                                                     System.out.println("You won a " + e1.getName() +" soft toy");
                                                     errProne=false;
@@ -200,7 +241,7 @@ public class tileGame {
                                     if(calc.checkAns(a,answer)==true){
                                         System.out.println("Correct Answer");
                                         try{
-                                            softToys e1=(softToys)carpet[dice].getToy().clone();
+                                            softToys e1=(softToys)c.get(dice).getToy().clone();
                                             p.getBucket().addToy(e1);;
                                             System.out.println("You won a " + e1.getName() +" soft toy");
                                             errProne=false;
@@ -241,7 +282,15 @@ public class tileGame {
             
         }
         System.out.println("Game Over");
-        System.out.println("SOFT TOYS WON ARE:");
-        p.getBucket().showBucket();
+        
+        try{
+            
+            p.getBucket().showBucket();
+        }
+        catch (NoToysException e){
+            System.out.println("Sorry no toys won by player all through the game");
+        }
+        
+        
     }
 }
