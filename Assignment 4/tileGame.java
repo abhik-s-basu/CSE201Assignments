@@ -226,6 +226,7 @@ public class tileGame {
             }
             
         }
+        System.out.println("Game Over");
         System.out.println("SOFT TOYS WON ARE:");
         p.showBucket();
     }
