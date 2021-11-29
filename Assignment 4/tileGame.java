@@ -100,27 +100,6 @@ public class tileGame {
     public static void main(String[] args){
         Scanner sc = new Scanner (System.in);
         Random rand= new Random();
-        // tile[] carpet = new tile[20];
-        // carpet[0]=new tile(new softToys("Honey"),1);
-        // carpet[1]=new tile(new softToys("Pookie"),2);
-        // carpet[2]=new tile(new softToys("Snowball"),3);
-        // carpet[3]=new tile(new softToys("Cuddles"),4);
-        // carpet[4]=new tile(new softToys("Fudge"),5);
-        // carpet[5]=new tile(new softToys("Ted"),6);
-        // carpet[6]=new tile(new softToys("Wally"),7);
-        // carpet[7]=new tile(new softToys("Donald Duck"),8);
-        // carpet[8]=new tile(new softToys("Tuffy"),9);
-        // carpet[9]=new tile(new softToys("Squishy"),10);
-        // carpet[10]=new tile(new softToys("Minion"),11);
-        // carpet[11]=new tile(new softToys("Jigglypuff"),12);
-        // carpet[12]=new tile(new softToys("Mr Cuddlesworth"),13);
-        // carpet[13]=new tile(new softToys("Booboo"),14);
-        // carpet[14]=new tile(new softToys("Fuzzy Wuzzy"),15);
-        // carpet[15]=new tile(new softToys("Pikachu"),16);
-        // carpet[16]=new tile(new softToys("Captain America"),17);
-        // carpet[17]=new tile(new softToys("Thor"),18);
-        // carpet[18]=new tile(new softToys("Iron Man"),19);
-        // carpet[19]=new tile(new softToys("Doctor Strange"),20);
         carpet c = new carpet();
         c.add(new softToys("Honey"),1);
         c.add(new softToys("Pookie"),2);
