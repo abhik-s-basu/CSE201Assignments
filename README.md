@@ -15,4 +15,8 @@
 
 <h3>This assignment was yet another implemention of a command line game where a random dice landed us on various tiles. Some of these tiles had toys in them and others had questions in them which were either 1) string concatentation questions or 2) division questions.If answered correctly, the person would get a toy else they would not get a toy. In the end all the toys won by the player were listed. Mainly tested out our concepts of exception handling using try and catch statements and creation of custom errors along with that generic programming was also tested. </h3> <br>
 
+<ins> <h2> <b> Bonus Assignment </b> </h2> </ins>
+
+<h3>This assignment was basically asking us to implement a pascal triangle for the nth row and kth column. The inputs will be taken from the command line and accordingly using a thread pool the result will be computed in an efficient manner. </h3> <br>
+
 
